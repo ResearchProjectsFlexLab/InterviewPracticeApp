@@ -37,7 +37,7 @@ final class InterviewSession {
 
     init(
         questions: [InterviewQuestion] = InterviewQuestion.standardSet,
-        secondsPerQuestion: Int = 30,
+        secondsPerQuestion: Int = 20,
         tickInterval: Duration = .seconds(1)
     ) {
         precondition(!questions.isEmpty, "A session needs at least one question.")

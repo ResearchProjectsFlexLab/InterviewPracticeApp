@@ -29,14 +29,14 @@ struct InterviewSessionTests {
         InterviewSession(tickInterval: .seconds(3600))
     }
 
-    /// 30 ticks count 30 down to 0; one more tick moves to the next question.
-    private let ticksPerQuestion = 31
+    /// 20 ticks count 20 down to 0; one more tick moves to the next question.
+    private let ticksPerQuestion = 21
 
     @Test func initialStateIsWelcomeWithNoTimer() {
         let session = makeSession()
         #expect(session.phase == .welcome)
         #expect(session.currentIndex == 0)
-        #expect(session.remainingSeconds == 30)
+        #expect(session.remainingSeconds == 20)
         #expect(!session.isTimerRunning)
     }
 
@@ -44,7 +44,7 @@ struct InterviewSessionTests {
         let session = makeSession()
         session.tick()
         #expect(session.phase == .welcome)
-        #expect(session.remainingSeconds == 30)
+        #expect(session.remainingSeconds == 20)
     }
 
     @Test func startShowsFirstQuestionAndStartsTimer() {
@@ -53,7 +53,7 @@ struct InterviewSessionTests {
         #expect(session.phase == .inProgress)
         #expect(session.questionNumber == 1)
         #expect(session.currentQuestion.text == "Tell me about yourself.")
-        #expect(session.remainingSeconds == 30)
+        #expect(session.remainingSeconds == 20)
         #expect(session.isTimerRunning)
     }
 
@@ -63,33 +63,33 @@ struct InterviewSessionTests {
         session.tick()
         session.tick()
         session.start()
-        #expect(session.remainingSeconds == 28)
+        #expect(session.remainingSeconds == 18)
         #expect(session.currentIndex == 0)
     }
 
-    @Test func countdownShowsEverySecondFrom30To0WithoutJumping() {
+    @Test func countdownShowsEverySecondFrom20To0WithoutJumping() {
         let session = makeSession()
         session.start()
         var shown = [session.remainingSeconds]
-        for _ in 0..<30 {
+        for _ in 0..<20 {
             session.tick()
             shown.append(session.remainingSeconds)
         }
-        #expect(shown == Array((0...30).reversed()))
+        #expect(shown == Array((0...20).reversed()))
         #expect(session.currentIndex == 0)
     }
 
-    @Test func advancesExactlyOneQuestionAfterZeroAndResetsTo30() {
+    @Test func advancesExactlyOneQuestionAfterZeroAndResetsTo20() {
         let session = makeSession()
         session.start()
-        for _ in 0..<30 { session.tick() }
+        for _ in 0..<20 { session.tick() }
         #expect(session.currentIndex == 0)
         #expect(session.remainingSeconds == 0)
 
         session.tick()
         #expect(session.currentIndex == 1)
         #expect(session.currentQuestion.text == "Why are you interested in this position?")
-        #expect(session.remainingSeconds == 30)
+        #expect(session.remainingSeconds == 20)
         #expect(session.isTimerRunning)
     }
 
@@ -111,7 +111,7 @@ struct InterviewSessionTests {
     @Test func lastQuestionCompletesAfterReachingZero() {
         let session = makeSession()
         session.start()
-        for _ in 0..<(9 * ticksPerQuestion + 30) { session.tick() }
+        for _ in 0..<(9 * ticksPerQuestion + 20) { session.tick() }
         #expect(session.phase == .inProgress)
         #expect(session.questionNumber == 10)
         #expect(session.remainingSeconds == 0)
@@ -147,7 +147,7 @@ struct InterviewSessionTests {
         session.reset()
         #expect(session.phase == .welcome)
         #expect(session.currentIndex == 0)
-        #expect(session.remainingSeconds == 30)
+        #expect(session.remainingSeconds == 20)
         #expect(!session.isTimerRunning)
 
         session.start()
@@ -174,11 +174,11 @@ struct InterviewSessionTests {
         #expect(!session.isTimerRunning)
         #expect(session.isSuspended)
         #expect(session.phase == .inProgress)
-        #expect(session.remainingSeconds == 18)
+        #expect(session.remainingSeconds == 8)
 
         session.setSceneActive(true)
         #expect(session.isTimerRunning)
-        #expect(session.remainingSeconds == 18)
+        #expect(session.remainingSeconds == 8)
         #expect(session.currentIndex == 0)
     }
 
@@ -198,7 +198,7 @@ struct InterviewSessionTests {
         session.interviewViewDidAppear()
         session.setSceneActive(true)
         #expect(session.isTimerRunning)
-        #expect(session.remainingSeconds == 30)
+        #expect(session.remainingSeconds == 20)
     }
 
     @Test func startWhileSceneInactiveWaitsForActivation() {
@@ -247,7 +247,7 @@ struct InterviewSessionTests {
         try await Task.sleep(for: .milliseconds(20))
 
         #expect(session.currentIndex == 0)
-        #expect(session.remainingSeconds >= 29, "Timer jumped to \(session.remainingSeconds) after a stall")
+        #expect(session.remainingSeconds >= 19, "Timer jumped to \(session.remainingSeconds) after a stall")
         session.reset()
     }
 

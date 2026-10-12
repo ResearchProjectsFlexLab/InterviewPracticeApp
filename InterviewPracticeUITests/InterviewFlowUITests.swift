@@ -44,7 +44,7 @@ final class InterviewFlowUITests: XCTestCase {
 
             if let previousAppearance {
                 let interval = appearedAt.timeIntervalSince(previousAppearance)
-                XCTAssertEqual(interval, 31, accuracy: 4, "Question \(index + 1) appeared after \(interval)s")
+                XCTAssertEqual(interval, 21, accuracy: 4, "Question \(index + 1) appeared after \(interval)s")
             }
             previousAppearance = appearedAt
 
@@ -58,7 +58,7 @@ final class InterviewFlowUITests: XCTestCase {
                 sleep(3)
                 let later = secondsRemaining(countdown)
                 XCTAssertLessThan(later, first, "Countdown is not decreasing")
-                XCTAssertGreaterThanOrEqual(first, 27)
+                XCTAssertGreaterThanOrEqual(first, 17)
                 attachScreenshot(app, named: "2-Question1")
             }
             if index == 1 {
@@ -69,7 +69,7 @@ final class InterviewFlowUITests: XCTestCase {
         // Completion screen after question 10's countdown.
         XCTAssertTrue(app.staticTexts["Practice Complete!"].waitForExistence(timeout: 40))
         if let previousAppearance {
-            XCTAssertEqual(Date().timeIntervalSince(previousAppearance), 31, accuracy: 4)
+            XCTAssertEqual(Date().timeIntervalSince(previousAppearance), 21, accuracy: 4)
         }
         XCTAssertTrue(app.buttons["Practice Again"].exists)
         XCTAssertTrue(app.buttons["Back to Home"].exists)
